@@ -57,6 +57,7 @@
         th, td {
             padding: 8px;
             text-align: center;
+            cursor: pointer; /* Zeiger, um anklickbare Zellen anzuzeigen */
         }
         td.editable {
             background-color: #f9f9f9;
@@ -153,16 +154,21 @@
             const editableCells = document.querySelectorAll(`td.editable[data-user="${username}"]`);
             editableCells.forEach(cell => {
                 cell.contentEditable = true;
-                cell.addEventListener('blur', function() {
-                    if (cell.textContent !== '0' && cell.textContent !== '1') {
-                        alert('Bitte nur "0" oder "1" eingeben.');
-                        cell.textContent = '0';
-                        return;
-                    }
+                cell.addEventListener('click', function() {
+                    toggleCellValue(cell);
                     console.log(`Gespeicherte Daten für ${username}: ${cell.textContent}`);
                     saveData();
                 });
             });
+        }
+
+        // Funktion zum Umschalten des Werts bei Klick
+        function toggleCellValue(cell) {
+            if (cell.textContent === '0') {
+                cell.textContent = '1';
+            } else {
+                cell.textContent = '0';
+            }
         }
         
         async function updateGitHubFile(content) {
