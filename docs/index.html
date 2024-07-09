@@ -166,7 +166,7 @@
         }
         
         async function updateGitHubFile(content) {
-            const token = process.env.GH_TOKEN; // Verwende den GitHub Token aus den Umgebungsvariablen
+            const token = secret.GH_TOKEN; // Verwende den GitHub Token aus den Umgebungsvariablen
             const repo = 'star-trek-fan/star-trek-fan.github.io';
             const path = 'docs/tabledata.json';
             const branch = 'main';
