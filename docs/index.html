@@ -168,13 +168,17 @@
         function saveData() {
             const tableData = [];
             const rows = document.querySelectorAll('#dataTable tbody tr');
-            rows.forEach(row => {
-                const rowData = [];
-                row.querySelectorAll('td.editable').forEach(cell => {
-                    rowData.push(cell.textContent);
+            const colCount = rows[0].querySelectorAll('td.editable').length;
+
+            for (let colIndex = 0; colIndex < colCount; colIndex++) {
+                const columnData = [];
+                rows.forEach(row => {
+                    const cell = row.querySelectorAll('td.editable')[colIndex];
+                    columnData.push(cell.textContent);
                 });
-                tableData.push(rowData);
-            });
+                tableData.push(columnData);
+            }
+
             const json = JSON.stringify(tableData);
             console.log(json);
             // Hier könntest du den Code hinzufügen, um die Daten in die Datei "tabledata" zu speichern
