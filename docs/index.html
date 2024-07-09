@@ -1,46 +1,161 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="de">
 <head>
-      <title>HTML Login Form</title>
-      <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interaktive Tabelle</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header {
+            background-color: #333;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+        }
+        nav {
+            background-color: #444;
+            overflow: hidden;
+        }
+        nav a {
+            float: left;
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+        nav a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+        main {
+            padding: 20px;
+            display: flex;
+        }
+        section {
+            flex: 1;
+        }
+        #login {
+            max-width: 300px;
+            margin-right: 20px;
+            padding: 10px;
+            background: #fff;
+            border: 1px solid #ddd;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        td.editable {
+            background-color: #f9f9f9;
+        }
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+    </style>
 </head>
-
 <body>
-      <div class="main">
-            <h1>StarTrek</h1>
-            <h3>Enter your login credentials</h3>
-            <form action="">
-                  <label for="first">
-                        Username:
-                  </label>
-                  <input type="text" 
-                         id="first" 
-                         name="first" 
-                         placeholder="Enter your Username" required>
-
-                  <label for="password">
-                        Password:
-                  </label>
-                  <input type="password"
-                         id="password" 
-                         name="password"
-                         placeholder="Enter your Password" required>
-
-                  <div class="wrap">
-                        <button type="submit"
-                                onclick="solve()">
-                              Submit
-                        </button>
-                  </div>
+    <header>
+        <h1>Willkommen auf meiner interaktiven Tabelle</h1>
+    </header>
+    <nav>
+        <a href="#home">Home</a>
+        <a href="#about">Über mich</a>
+        <a href="#services">Dienstleistungen</a>
+        <a href="#contact">Kontakt</a>
+    </nav>
+    <main>
+        <aside id="login">
+            <h2>Login</h2>
+            <form id="loginForm">
+                <label for="username">Benutzername:</label>
+                <input type="text" id="username" name="username" required><br><br>
+                <label for="password">Passwort:</label>
+                <input type="password" id="password" name="password" required><br><br>
+                <button type="submit">Login</button>
             </form>
-            <p>Not registered?
-                  <a href="#"
-                     style="text-decoration: none;">
-                        Create an account
-                  </a>
-            </p>
-      </div>
-</body>
+            <p id="loginMessage"></p>
+        </aside>
+        <section>
+            <h2>Tabelle</h2>
+            <table id="dataTable">
+                <thead>
+                    <tr>
+                        <th>Benutzer</th>
+                        <th>Spalte 1</th>
+                        <th>Spalte 2</th>
+                        <th>Spalte 3</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>user1</td>
+                        <td class="editable" data-user="user1">Daten 1</td>
+                        <td class="editable" data-user="user1">Daten 2</td>
+                        <td class="editable" data-user="user1">Daten 3</td>
+                    </tr>
+                    <tr>
+                        <td>user2</td>
+                        <td class="editable" data-user="user2">Daten 1</td>
+                        <td class="editable" data-user="user2">Daten 2</td>
+                        <td class="editable" data-user="user2">Daten 3</td>
+                    </tr>
+                    <!-- Weitere Benutzer können hier hinzugefügt werden -->
+                </tbody>
+            </table>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 Meine Website</p>
+    </footer>
+    <script>
+        const loginForm = document.getElementById('loginForm');
+        const loginMessage = document.getElementById('loginMessage');
+        let loggedInUser = null;
 
+        loginForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // Einfache Authentifizierung (keine echte Sicherheit)
+            if ((username === 'user1' && password === 'pass1') || (username === 'user2' && password === 'pass2')) {
+                loggedInUser = username;
+                loginMessage.textContent = 'Erfolgreich eingeloggt als ' + username;
+                enableEditing(username);
+            } else {
+                loginMessage.textContent = 'Ungültiger Benutzername oder Passwort';
+            }
+        });
+
+        function enableEditing(username) {
+            const editableCells = document.querySelectorAll(`td.editable[data-user="${username}"]`);
+            editableCells.forEach(cell => {
+                cell.contentEditable = true;
+                cell.addEventListener('blur', function() {
+                    console.log(`Gespeicherte Daten für ${username}: ${cell.textContent}`);
+                    // Hier kannst du die Daten speichern, z.B. durch einen AJAX-Call
+                });
+            });
+        }
+    </script>
+</body>
 </html>
