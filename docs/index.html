@@ -164,12 +164,55 @@
                 });
             });
         }
-
+        
+        async function updateGitHubFile(content) {
+            const token = process.env.GH_TOKEN; // Verwende den GitHub Token aus den Umgebungsvariablen
+            const repo = 'star-trek-fan/star-trek-fan.github.io';
+            const path = 'docs/tabledata.json';
+            const branch = 'main';
+    
+            // Get the current file sha if it exists
+            let sha = '';
+            try {
+                const getResponse = await fetch(`https://api.github.com/repos/${repo}/contents/${path}`, {
+                    headers: {
+                        'Authorization': `token ${token}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+                const fileData = await getResponse.json();
+                sha = fileData.sha;
+            } catch (error) {
+                console.log('File does not exist, will create a new one.');
+            }
+    
+            // Update or create the file content
+            const updateResponse = await fetch(`https://api.github.com/repos/${repo}/contents/${path}`, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `token ${token}`,
+                    'Accept': 'application/vnd.github.v3+json'
+                },
+                body: JSON.stringify({
+                    message: 'Update tempdata.json',
+                    content: btoa(content),
+                    sha: sha,
+                    branch: branch
+                })
+            });
+    
+            if (updateResponse.ok) {
+                console.log('Datei erfolgreich aktualisiert');
+            } else {
+                console.error('Fehler beim Aktualisieren der Datei', await updateResponse.text());
+            }
+        }
+    
         function saveData() {
             const tableData = [];
             const rows = document.querySelectorAll('#dataTable tbody tr');
             const colCount = rows[0].querySelectorAll('td.editable').length;
-
+    
             for (let colIndex = 0; colIndex < colCount; colIndex++) {
                 const columnData = [];
                 rows.forEach(row => {
@@ -178,11 +221,12 @@
                 });
                 tableData.push(columnData);
             }
-
+    
             const json = JSON.stringify(tableData);
             console.log(json);
-            // Hier könntest du den Code hinzufügen, um die Daten in die Datei "tabledata" zu speichern
-            // Dies erfordert normalerweise einen Server, der die Daten entgegennimmt und speichert
+            
+            // Update the GitHub file
+            updateGitHubFile(json);
         }
     </script>
 </body>
