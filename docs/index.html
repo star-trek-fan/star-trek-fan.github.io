@@ -153,7 +153,6 @@
         function enableEditing(username) {
             const editableCells = document.querySelectorAll(`td.editable[data-user="${username}"]`);
             editableCells.forEach(cell => {
-                cell.contentEditable = true;
                 cell.addEventListener('click', function() {
                     toggleCellValue(cell);
                     console.log(`Gespeicherte Daten für ${username}: ${cell.textContent}`);
