@@ -56,7 +56,7 @@
         }
         th, td {
             padding: 8px;
-            text-align: left;
+            text-align: center;
         }
         td.editable {
             background-color: #f9f9f9;
@@ -99,26 +99,29 @@
             <table id="dataTable">
                 <thead>
                     <tr>
-                        <th>Benutzer</th>
-                        <th>Spalte 1</th>
-                        <th>Spalte 2</th>
-                        <th>Spalte 3</th>
+                        <th>Daten</th>
+                        <th>user1</th>
+                        <th>user2</th>
+                        <!-- Weitere Benutzer können hier hinzugefügt werden -->
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td>user1</td>
-                        <td class="editable" data-user="user1">Daten 1</td>
-                        <td class="editable" data-user="user1">Daten 2</td>
-                        <td class="editable" data-user="user1">Daten 3</td>
+                        <td>Zeile 1</td>
+                        <td class="editable" data-user="user1">0</td>
+                        <td class="editable" data-user="user2">0</td>
                     </tr>
                     <tr>
-                        <td>user2</td>
-                        <td class="editable" data-user="user2">Daten 1</td>
-                        <td class="editable" data-user="user2">Daten 2</td>
-                        <td class="editable" data-user="user2">Daten 3</td>
+                        <td>Zeile 2</td>
+                        <td class="editable" data-user="user1">0</td>
+                        <td class="editable" data-user="user2">0</td>
                     </tr>
-                    <!-- Weitere Benutzer können hier hinzugefügt werden -->
+                    <tr>
+                        <td>Zeile 3</td>
+                        <td class="editable" data-user="user1">0</td>
+                        <td class="editable" data-user="user2">0</td>
+                    </tr>
+                    <!-- Weitere Zeilen können hier hinzugefügt werden -->
                 </tbody>
             </table>
         </section>
@@ -151,10 +154,31 @@
             editableCells.forEach(cell => {
                 cell.contentEditable = true;
                 cell.addEventListener('blur', function() {
+                    if (cell.textContent !== '0' && cell.textContent !== '1') {
+                        alert('Bitte nur "0" oder "1" eingeben.');
+                        cell.textContent = '0';
+                        return;
+                    }
                     console.log(`Gespeicherte Daten für ${username}: ${cell.textContent}`);
-                    // Hier kannst du die Daten speichern, z.B. durch einen AJAX-Call
+                    saveData();
                 });
             });
+        }
+
+        function saveData() {
+            const tableData = [];
+            const rows = document.querySelectorAll('#dataTable tbody tr');
+            rows.forEach(row => {
+                const rowData = [];
+                row.querySelectorAll('td.editable').forEach(cell => {
+                    rowData.push(cell.textContent);
+                });
+                tableData.push(rowData);
+            });
+            const json = JSON.stringify(tableData);
+            console.log(json);
+            // Hier könntest du den Code hinzufügen, um die Daten in die Datei "tabledata" zu speichern
+            // Dies erfordert normalerweise einen Server, der die Daten entgegennimmt und speichert
         }
     </script>
 </body>
